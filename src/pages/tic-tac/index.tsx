@@ -1,9 +1,6 @@
 import { AspectRatio, Box, Button, Center, Paper, SimpleGrid } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { IconX, IconCircle } from '@tabler/icons';
-import io from 'socket.io-client';
-
-let socket: ReturnType<typeof io> | undefined = undefined;
 
 type CellType = {
 	value: 0 | 1 | undefined;
@@ -104,8 +101,6 @@ const TicTac = ({ currentRole }: { currentRole: 0 | 1 }) => {
 			}
 		}
 
-		socket?.emit('test-input', 'Why is this so hard');
-
 		setRole(cur => (cur === 0 ? 1 : 0));
 	};
 
@@ -120,24 +115,6 @@ const TicTac = ({ currentRole }: { currentRole: 0 | 1 }) => {
 		});
 		setRole(0);
 	};
-
-	useEffect(() => {
-		const socketInit = async () => {
-			await fetch('/api/socket');
-			socket = io();
-			socket.on('connect', () => {
-				console.log('connected');
-			});
-
-			socket.on('test-update', msg => {
-				console.log(msg, 'input');
-			});
-
-			return null;
-		};
-
-		socketInit();
-	}, []);
 
 	return (
 		<div>
