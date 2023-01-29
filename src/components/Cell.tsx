@@ -25,11 +25,11 @@ export const Cell = ({ content, cellIndex }: CellProps) => {
 					duration: 0.4,
 				}}
 				className={clsx({
-					'w-14 h-14 font-extrabold  border-2 border-neutral-200 text-neutral-200 flex items-center justify-center text-3xl ':
+					'border-solid w-14 h-14 font-extrabold  border-2 border-neutral-800 dark:border-neutral-400   flex items-center justify-center text-3xl ':
 						true,
-					'bg-green-400': content.state === 'correct',
-					'bg-orange-400': content.state === 'misplaced',
-					'bg-neutral-500': content.state === 'wrong',
+					'bg-green-600 text-white': content.state === 'correct',
+					'bg-orange-600 text-white': content.state === 'misplaced',
+					'bg-neutral-700 text-white': content.state === 'wrong',
 				})}>
 				{content.input}
 			</motion.div>

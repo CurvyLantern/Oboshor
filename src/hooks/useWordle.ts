@@ -1,9 +1,10 @@
+import { showNotification } from '@mantine/notifications';
 import { useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import { GridCellType, GridDataType, GridRowType, letterState } from '../types/types';
-import { keyPressAllowed } from './AllowedKeys';
-import { inputExistsInList } from './inputExistsInList';
-import { KeyBackspace, KeyEnter } from './keys';
+import { keyPressAllowed } from '../utils/AllowedKeys';
+import { inputExistsInList } from '../utils/inputExistsInList';
+import { KeyBackspace, KeyEnter } from '../utils/keys';
+import { useResult } from './useResult';
 class CellObject {
 	array: GridRowType = [
 		{ input: '', state: undefined },
@@ -27,9 +28,14 @@ export const useWordle = (answer: string) => {
 	const [rowIndex, setRowIndex] = useState(0);
 	const [colIndex, setColIndex] = useState(0);
 	const [keyStateMap, setKeyStateMap] = useState<Map<string, Exclude<letterState, undefined>>>(new Map());
+	const [activeKey, setActiveKey] = useState('');
 	const timeoutRef = useRef<number>(0);
+	const { result, state } = useResult(rowDataGrid);
+
 	const handleFn = (key: string) => {
+		if (result === 'win' || state === 'finished') return;
 		if (!keyPressAllowed(key)) return;
+		setActiveKey(key);
 		if (rowIndex >= 6) {
 			// final match
 			return;
@@ -37,10 +43,13 @@ export const useWordle = (answer: string) => {
 		switch (key) {
 			case KeyEnter:
 				{
-					toast.clearWaitingQueue();
+					// toast.clearWaitingQueue();
 					//see if any cell is empty
 					if (colIndex < 6) {
-						toast.warning('not enough words');
+						showNotification({
+							message: 'not enough words',
+							color: 'orange',
+						});
 						return;
 					}
 					const tempRowArr = rowDataGrid[rowIndex];
@@ -48,7 +57,9 @@ export const useWordle = (answer: string) => {
 					if (!inputExistsInList(inputString)) {
 						window.clearTimeout(timeoutRef.current);
 
-						toast('invalid word');
+						showNotification({
+							message: 'invalid word',
+						});
 						setInvalidWord(true);
 						timeoutRef.current = window.setTimeout(() => {
 							setInvalidWord(false);
@@ -100,8 +111,6 @@ export const useWordle = (answer: string) => {
 					});
 					setKeyStateMap(new Map(keyStateMap));
 
-					console.log(keyStateMap, 'key prompt');
-
 					setRowDataGrid([...rowDataGrid]);
 
 					setRowIndex(prev => Math.min(prev + 1, 6));
@@ -138,5 +147,8 @@ export const useWordle = (answer: string) => {
 		keyStateMap,
 		handleFn,
 		rowDataGrid,
+		activeKey,
+		result,
+		gameState: state,
 	};
 };

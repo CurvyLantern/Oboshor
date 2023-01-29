@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+.keyboard_button__dark {
+@apply dark:bg-neutral-600
+}
+
+ .keyboard_button {
+  @apply px-4 outline-none  rounded-md py-3 uppercase flex-1 border-none shadow-md shadow-[#00000022] cursor-pointer;
+ }
+}

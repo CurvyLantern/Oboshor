@@ -10,6 +10,7 @@ interface RowProps {
 }
 export const Row = ({ thisRowIndex, rowState, activeRowIndex, invalidWord = false }: RowProps) => {
 	const wiggle = invalidWord && thisRowIndex === activeRowIndex;
+
 	return (
 		<motion.div
 			initial={false}

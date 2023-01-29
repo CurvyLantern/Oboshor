@@ -1,4 +1,4 @@
-import { words, words2 } from '../DB/words';
+import { words2 } from 'DB/words';
 export const getRandomWord = () => {
 	const len = words2.length;
 	const randomIdx = Math.round(Math.random() * len + 1);
